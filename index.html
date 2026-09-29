@@ -54,7 +54,9 @@
 
 .author-signature{display:flex;flex-direction:column;align-items:center;flex-shrink:0;min-width:86px;line-height:1.5}.author-signature>span{font-size:13px;color:#7a866f}.author-signature>strong{font-family:var(--serif);font-size:29px;font-weight:400;color:#9e7d3d}.full-letter .photo-credit{margin-top:30px;padding-top:14px;border-top:1px solid var(--line);max-width:none;color:#708268}.full-letter .photo-credit p{font-family:var(--sans);font-size:13px;line-height:1.9;margin-top:0}
 @media(max-width:700px){footer>p{flex-basis:calc(100% - 70px)}.author-signature{margin-inline-start:auto;min-width:76px}.author-signature>strong{font-size:27px}}
-.sound-toggle.is-playing .sound-bars i{animation:sound-wave .9s ease-in-out infinite alternate}.music-panel{position:fixed;z-index:20;left:24px;bottom:24px;width:min(382px,calc(100vw - 32px));background:var(--deep);border:1px solid #c9d6bf4d;box-shadow:0 12px 55px #08241f4d;color:var(--paper);padding:17px;border-radius:4px;max-height:calc(100svh - 32px);overflow:auto}.music-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:12px}.music-heading>div>span{font-size:12px;color:var(--gold)}.music-heading h2{font-family:var(--serif);font-size:29px;line-height:1.55}.music-heading p{font-size:14px;color:#c2d0c5}.music-heading button{width:42px;height:42px;flex-shrink:0;border:1px solid #ffffff40;border-radius:50%;background:transparent;color:var(--paper);font-size:27px;line-height:1}.music-frame{width:100%;height:216px;min-width:200px;min-height:200px;background:#091d1a}.music-frame>div,.music-frame iframe{display:block;width:100%;height:100%;border:0}.music-status{font-size:14px;line-height:1.9;color:#d0ddcc;margin-top:12px}.music-retry{border:1px solid #c9d6bf80;background:transparent;color:var(--gold);font-size:14px;padding:6px 16px;margin-top:10px;min-height:40px}@media(max-width:700px){.music-panel{left:16px;bottom:16px;padding:15px}.music-frame{height:200px}.music-heading h2{font-size:27px}}@media(prefers-reduced-motion:reduce){.sound-toggle.is-playing .sound-bars i{animation:none!important}}
+.sound-toggle.is-playing .sound-bars i{animation:sound-wave .9s ease-in-out infinite alternate}.music-panel{position:fixed;z-index:20;left:24px;bottom:24px;width:min(382px,calc(100vw - 32px));background:var(--deep);border:1px solid #c9d6bf4d;box-shadow:0 12px 55px #08241f4d;color:var(--paper);padding:17px;border-radius:4px;max-height:calc(100svh - 32px);overflow:auto}.music-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:12px}.music-heading>div>span{font-size:12px;color:var(--gold)}.music-heading h2{font-family:var(--serif);font-size:29px;line-height:1.55}.music-heading p{font-size:14px;color:#c2d0c5}.music-heading button{width:42px;height:42px;flex-shrink:0;border:1px solid #ffffff40;border-radius:50%;background:transparent;color:var(--paper);font-size:27px;line-height:1}.music-status{font-size:14px;line-height:1.9;color:#d0ddcc;margin-top:12px}.music-retry{border:1px solid #c9d6bf80;background:transparent;color:var(--gold);font-size:14px;padding:6px 16px;margin-top:10px;min-height:40px}@media(max-width:700px){.music-panel{left:16px;bottom:16px;padding:15px}.music-heading h2{font-size:27px}}@media(prefers-reduced-motion:reduce){.sound-toggle.is-playing .sound-bars i{animation:none!important}}
+
+.music-audio{padding:15px 0 4px;border-top:1px solid #ffffff21}.music-audio audio{display:block;width:100%;min-width:0;height:54px;color-scheme:dark}
 </style>
 </head>
 <body>
@@ -65,9 +67,9 @@
     <button class="sound-toggle" id="sound-toggle" type="button" aria-expanded="false" aria-controls="music-panel" aria-label="بصوت القيصر — فتح مشغّل أنا وليلى"><span class="sound-bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span id="sound-label">بصوت القيصر</span><span class="sound-state">استمعي</span></button>
   </header>
   <aside class="music-panel" id="music-panel" aria-labelledby="music-title" hidden>
-    <div class="music-heading"><div><span>بصوت القيصر</span><h2 id="music-title">أنا وليلى</h2><p>كاظم الساهر · مقطع من الأغنية</p></div><button id="close-music" type="button" aria-label="إيقاف الأغنية وإغلاق المشغّل">×</button></div>
-    <div class="music-frame" id="music-frame"></div>
-    <p class="music-status" id="music-status" role="status">لحظة… نجهّز لكِ المقطع.</p>
+    <div class="music-heading"><div><span>بصوت القيصر</span><h2 id="music-title">أنا وليلى</h2><p>كاظم الساهر</p></div><button id="close-music" type="button" aria-label="إيقاف الأغنية وإغلاق المشغّل">×</button></div>
+    <div class="music-audio"><audio id="birthday-audio" src="ana-wa-laila.m4a" controls preload="none" aria-label="أنا وليلى — كاظم الساهر">متصفحكِ لا يدعم تشغيل الصوت.</audio></div>
+    <p class="music-status" id="music-status" role="status">أغنيةٌ ترافقكِ وأنتِ تقرئين.</p>
     <button class="music-retry" id="retry-music" type="button" hidden>إعادة المحاولة</button>
   </aside>
   <main>
@@ -149,52 +151,69 @@ function celebrate(){
 const reveal=document.getElementById('reveal-wish');
 reveal.addEventListener('click',()=>{reveal.setAttribute('aria-expanded','true');reveal.hidden=true;document.getElementById('wish-message').hidden=false;celebrate();document.getElementById('greeting-title').focus({preventScroll:true});document.getElementById('wish-message').scrollIntoView({behavior:reducedMotion.matches?'instant':'smooth',block:'center'});});
 document.getElementById('repeat-wish').addEventListener('click',celebrate);
-// Official Apple Music preview; playback stays inside the greeting.
+// The supplied audio plays locally inside the greeting.
 const musicButton=document.getElementById('sound-toggle');
 const musicPanel=document.getElementById('music-panel');
-const musicFrame=document.getElementById('music-frame');
+const musicAudio=document.getElementById('birthday-audio');
 const musicStatus=document.getElementById('music-status');
 const musicRetry=document.getElementById('retry-music');
 const musicClose=document.getElementById('close-music');
-let musicTimer, musicGeneration=0;
-function setMusicState(label){document.querySelector('.sound-state').textContent=label;}
-function startMusic(){
-  const generation=++musicGeneration;
-  clearTimeout(musicTimer);musicFrame.replaceChildren();musicRetry.hidden=true;
-  if(navigator.onLine===false){
-    musicFrame.hidden=true;musicStatus.textContent='اتصلي بالإنترنت، ثم جرّبي تشغيل الأغنية.';musicRetry.hidden=false;setMusicState('غير متاح');return;
-  }
-  musicFrame.hidden=false;
-  musicStatus.textContent='لحظة… نجهّز لكِ المقطع.';setMusicState('تحميل');
-  const frame=document.createElement('iframe');
-  frame.title='أنا وليلى — كاظم الساهر، مقطع من Apple Music';
-  frame.allow='autoplay *; encrypted-media *;';
-  frame.referrerPolicy='strict-origin-when-cross-origin';
-  frame.src='https://embed.music.apple.com/us/album/ana-wa-laila/1599542956?i=1599542957&theme=dark';
-  const failed=()=>{if(generation!==musicGeneration||musicPanel.hidden)return;clearTimeout(musicTimer);musicStatus.textContent='تعذّر تحميل المشغّل. تأكدي من الإنترنت وجرّبي مرة ثانية.';musicRetry.hidden=false;setMusicState('غير متاح');};
-  frame.addEventListener('load',()=>{
-    if(generation!==musicGeneration||musicPanel.hidden)return;
-    clearTimeout(musicTimer);musicRetry.hidden=true;
-    musicStatus.textContent='اضغطي ▶ للاستماع إلى مقطع من الأغنية وأنتِ هنا. إغلاق المشغّل يوقف الصوت.';
-    setMusicState('المشغّل');
-  });
-  frame.addEventListener('error',failed);
-  musicTimer=setTimeout(failed,20000);musicFrame.append(frame);
+let musicGeneration=0;
+musicAudio.volume=.35;
+function setMusicState(label,playing=false){
+  document.querySelector('.sound-state').textContent=label;
+  musicButton.classList.toggle('is-playing',playing);
 }
+function musicError(){
+  if(musicPanel.hidden)return;
+  musicStatus.textContent='تعذّر تحميل الأغنية. جرّبي تشغيلها مرة ثانية.';
+  musicRetry.hidden=false;setMusicState('غير متاح');
+}
+function startMusic(retry=false){
+  const generation=++musicGeneration;
+  musicRetry.hidden=true;
+  if(retry)musicAudio.load();
+  if(musicAudio.ended)musicAudio.currentTime=0;
+  musicStatus.textContent='لحظة… نجهّز لكِ الأغنية.';setMusicState('تحميل');
+  musicAudio.play().catch(error=>{
+    if(generation!==musicGeneration||musicPanel.hidden)return;
+    if(error.name==='AbortError')return;
+    if(error.name==='NotAllowedError'){
+      musicStatus.textContent='اضغطي تشغيل من المشغّل للاستماع إلى الأغنية.';setMusicState('جاهز');
+    }else musicError();
+  });
+}
+musicAudio.addEventListener('playing',()=>{
+  if(musicPanel.hidden){musicAudio.pause();return;}
+  musicRetry.hidden=true;musicStatus.textContent='الأغنية ترافقكِ… كمّلي الحكاية.';setMusicState('يعمل',true);
+});
+musicAudio.addEventListener('pause',()=>{
+  if(musicPanel.hidden||musicAudio.ended)return;
+  musicStatus.textContent='الأغنية متوقفة مؤقتاً. تابعيها متى أحببتِ.';setMusicState('متوقف');
+});
+musicAudio.addEventListener('waiting',()=>{
+  if(musicPanel.hidden||musicAudio.paused)return;
+  musicStatus.textContent='لحظة… نحمّل بقية الأغنية.';setMusicState('تحميل');
+});
+musicAudio.addEventListener('ended',()=>{
+  if(musicPanel.hidden)return;
+  musicStatus.textContent='انتهت الأغنية. يمكنكِ إعادتها من المشغّل.';setMusicState('انتهت');
+});
+musicAudio.addEventListener('error',musicError);
 function closeMusic(){
-  ++musicGeneration;clearTimeout(musicTimer);musicFrame.replaceChildren();
-  musicPanel.hidden=true;musicButton.setAttribute('aria-expanded','false');
+  ++musicGeneration;musicPanel.hidden=true;musicAudio.pause();
+  musicButton.setAttribute('aria-expanded','false');
   musicButton.setAttribute('aria-label','بصوت القيصر — فتح مشغّل أنا وليلى');
   setMusicState('استمعي');musicButton.focus({preventScroll:true});
 }
 musicButton.addEventListener('click',()=>{
   if(!musicPanel.hidden){closeMusic();return;}
   musicPanel.hidden=false;musicButton.setAttribute('aria-expanded','true');
-  musicButton.setAttribute('aria-label','بصوت القيصر — إيقاف المقطع وإغلاق المشغّل');
+  musicButton.setAttribute('aria-label','بصوت القيصر — إيقاف الأغنية وإغلاق المشغّل');
   musicClose.focus({preventScroll:true});startMusic();
 });
 musicClose.addEventListener('click',closeMusic);
-musicRetry.addEventListener('click',startMusic);
+musicRetry.addEventListener('click',()=>startMusic(true));
 musicPanel.addEventListener('keydown',event=>{if(event.key==='Escape'){event.preventDefault();closeMusic();}});
 </script>
 </body>
