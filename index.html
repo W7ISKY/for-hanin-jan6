@@ -78,6 +78,7 @@
 .gate-date{font-size:17px;color:#ecdfbd;line-height:1.8}
 .gate-date>span{display:block;font-size:13px;color:#b5c9b9;margin-top:2px}
 .gate-note{font-family:var(--serif);font-size:21px;color:#c4cfba;margin-top:26px}
+.gate-open{margin-top:30px;max-width:100%;min-height:52px}
 .gate-noscript{font-size:15px;color:var(--gold);margin-top:20px}
 @media(max-width:600px){.birthday-gate{padding:36px 25px 28px}.birthday-gate::after{inset:12px}.gate-from{font-size:15px;margin-bottom:26px}.gate-envelope{margin-bottom:23px}.gate-intro{font-size:16px}.birthday-countdown{gap:7px;margin-top:26px}.birthday-countdown>div{padding:12px 3px 8px}.birthday-countdown strong{font-size:31px}.birthday-countdown span{font-size:12px}.gate-date{font-size:16px}.gate-note{font-size:20px;margin-top:22px}}
 </style>
@@ -88,17 +89,18 @@
     <div class="gate-content">
       <p class="gate-from">من زين <span aria-hidden="true">—</span> إلى حنين</p>
       <div class="gate-envelope" aria-hidden="true"><span>ح</span></div>
-      <h1 id="gate-title">لكِ مفاجأة،<br><em>تنتظر يومكِ.</em></h1>
-      <p class="gate-intro">خبّأتُ لكِ هنا شيئاً من القلب.<br>وبعضُ الأشياء الجميلة، تستحقّ الانتظار.</p>
-      <div class="birthday-countdown" role="timer" aria-live="off" aria-label="الوقت المتبقي لفتح المفاجأة" aria-describedby="gate-date">
+      <h1 id="gate-title"><span id="gate-title-main">لكِ مفاجأة،</span><br><em id="gate-title-end">تنتظر يومكِ.</em></h1>
+      <p class="gate-intro" id="gate-intro">خبّأتُ لكِ هنا شيئاً من القلب.<br>وبعضُ الأشياء الجميلة، تستحقّ الانتظار.</p>
+      <div class="birthday-countdown" id="birthday-countdown" role="timer" aria-live="off" aria-label="الوقت المتبقي لفتح المفاجأة" aria-describedby="gate-date">
         <div><strong id="countdown-days">—</strong><span>يوم</span></div>
         <div><strong id="countdown-hours">—</strong><span>ساعة</span></div>
         <div><strong id="countdown-minutes">—</strong><span>دقيقة</span></div>
         <div><strong id="countdown-seconds">—</strong><span>ثانية</span></div>
       </div>
-      <p class="gate-date" id="gate-date"><time datetime="2027-01-06T00:00:00+03:00">٦ كانون الثاني ٢٠٢٧</time><span>تفتح عند منتصف الليل بتوقيت بغداد</span></p>
-      <p class="gate-note">سيأتي الوقت… ويصبح كلُّ هذا لكِ.</p>
-      <noscript><p class="gate-noscript">فعّلي JavaScript ليظهر العدّ التنازلي وتفتح المفاجأة في موعدها.</p></noscript>
+      <p class="gate-date" id="gate-date"><time datetime="2027-01-06T00:00:00+03:00">٦ كانون الثاني ٢٠٢٧</time><span>يمكنكِ فتحها من منتصف الليل بتوقيت بغداد</span></p>
+      <button class="button button-gold gate-open" id="open-surprise" type="button" aria-controls="greeting-content" hidden disabled>افتحي مفاجأتكِ <span aria-hidden="true">↗</span></button>
+      <p class="gate-note" id="gate-note">سيأتي الوقت… ويصبح كلُّ هذا لكِ.</p>
+      <noscript><p class="gate-noscript">فعّلي JavaScript ليظهر العدّ التنازلي وزر فتح المفاجأة في موعدها.</p></noscript>
     </div>
   </section>
   <p id="birthday-announcement" class="sr-only" role="status"></p>
@@ -158,27 +160,46 @@
 
   const gate = document.getElementById('birthday-gate');
   const content = document.getElementById('greeting-content');
+  const openButton = document.getElementById('open-surprise');
   const digits = Object.fromEntries(['days', 'hours', 'minutes', 'seconds'].map(unit => [unit, document.getElementById('countdown-' + unit)]));
   const number = new Intl.NumberFormat('ar-IQ', { minimumIntegerDigits: 2, useGrouping: false });
-  let timer, opened = false, showedCountdown = false;
+  let timer, ready = false, opened = false, showedCountdown = false;
+
+  function stopClock() {
+    clearInterval(timer);
+    document.removeEventListener('visibilitychange', update);
+    window.removeEventListener('pageshow', update);
+    window.removeEventListener('focus', update);
+  }
+
+  openButton.addEventListener('click', () => {
+    if (!ready || opened) return;
+    opened = true;
+    gate.hidden = true;
+    content.hidden = false;
+    content.inert = false;
+    document.getElementById('birthday-announcement').textContent = 'كل عام وأنتِ بخير يا حنين. هذه مفاجأتكِ، من القلب.';
+    const heading = document.getElementById('hero-title');
+    heading.focus({ preventScroll: true });
+    heading.scrollIntoView({ block: 'start', behavior: 'instant' });
+  });
 
   function update() {
-    if (opened) return;
+    if (ready) return;
     const state = countdownAt(Date.now());
     if (state.unlocked) {
-      opened = true;
-      clearInterval(timer);
-      document.removeEventListener('visibilitychange', update);
-      window.removeEventListener('pageshow', update);
-      window.removeEventListener('focus', update);
-      gate.hidden = true;
-      content.hidden = false;
-      content.inert = false;
+      ready = true;
+      stopClock();
+      document.getElementById('birthday-countdown').hidden = true;
+      document.getElementById('gate-date').hidden = true;
+      document.getElementById('gate-title-main').textContent = 'حان يومكِ،';
+      document.getElementById('gate-title-end').textContent = 'والمفاجأة لكِ.';
+      document.getElementById('gate-intro').textContent = 'كل عام وأنتِ بخير يا حنين. حين تكونين مستعدة، افتحي ما خبّأته لكِ.';
+      document.getElementById('gate-note').textContent = 'هذه اللحظة لكِ… افتحيها على مهل.';
+      openButton.disabled = false;
+      openButton.hidden = false;
       if (showedCountdown) {
-        document.getElementById('birthday-announcement').textContent = 'حان يومكِ يا حنين. كل عام وأنتِ بخير، مفاجأتكِ جاهزة.';
-        const heading = document.getElementById('hero-title');
-        heading.focus({ preventScroll: true });
-        heading.scrollIntoView({ block: 'start', behavior: 'instant' });
+        document.getElementById('birthday-announcement').textContent = 'حان يومكِ يا حنين. مفاجأتكِ جاهزة، اضغطي «افتحي مفاجأتكِ» عندما تكونين مستعدة.';
       }
       return;
     }
@@ -186,7 +207,7 @@
     for (const unit of Object.keys(digits)) digits[unit].textContent = number.format(state[unit]);
   }
   update();
-  if (!opened) {
+  if (!ready) {
     timer = setInterval(update, 1000);
     document.addEventListener('visibilitychange', update);
     window.addEventListener('pageshow', update);
